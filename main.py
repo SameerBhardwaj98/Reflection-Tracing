@@ -165,7 +165,7 @@ def reflectionPoint1(i,st,en,myCanvas):
     #print(e.get())
 
 #It sets the target inside the grid
-def setTarget(e,myCanvas,b):
+def setTarget(e,myCanvas,b,b2):
     st = e.get().split(',')
     global target
     global x
@@ -174,7 +174,7 @@ def setTarget(e,myCanvas,b):
         target = create_circle(x[0], x[1], 5, myCanvas, 'red')
         b.configure(state = 'disabled')
         e.configure(state = 'disabled')
-
+        b2.configure(state = 'normal')
 #It sets the shooter inside the grid
 def setShooter(e,myCanvas,b):
     global shooter
@@ -187,7 +187,7 @@ def setShooter(e,myCanvas,b):
         e.configure(state='disabled')
 
 #It is used to generate all the mirror images of the target
-def calculate2(x,myCanvas):
+def calculate2(x,myCanvas,b6):
     global reflections
     reflections = reflections + (x,)
     q = deque()
@@ -209,9 +209,9 @@ def calculate2(x,myCanvas):
                 myCanvas.tag_bind(buttons[index],"<Button-1>",lambda event, i=i : reflectionPoint1(i,st,x,myCanvas))
                 index += 1
                 # create_circle(i[0], i[1], 5, myCanvas,'red')
-
+    b6.configure(state = 'disabled')
 #It is used to reset all the widgets
-def reset(myCanvas,b3,b4,e1,e2):
+def reset(myCanvas,b3,b4,e1,e2,b6):
     global buttons
     global reflections
     global shooter
@@ -228,6 +228,7 @@ def reset(myCanvas,b3,b4,e1,e2):
     e2.configure(state='normal')
     e1.delete(0,'end')
     e2.delete(0,'end')
+    b6.configure(state = 'disabled')
 
 
 #This function is responsible for creating the window,the canvas and the buttons
@@ -268,13 +269,14 @@ def calculate():
     l2.place(x=1000, y=190)
     e2 = Entry(myWindow)
     e2.place(x=1000, y=220)
-    b4 = Button(myWindow,text = 'Set Target', command=lambda: setTarget(e2, myCanvas,b4))
-    b4.place(x=1000, y=250)
-    b6 = Button(myWindow,text = 'Generate Reflections', command=lambda: calculate2(x,myCanvas))
+    b6 = Button(myWindow, text='Generate Reflections', command=lambda: calculate2(x, myCanvas,b6))
     b6.place(x=1000, y=300)
+    b6.configure(state = 'disabled')
+    b4 = Button(myWindow,text = 'Set Target', command=lambda: setTarget(e2, myCanvas,b4,b6))
+    b4.place(x=1000, y=250)
     b = Button(myWindow,width = '10',height='1',text = 'Trace Paths',command = lambda : display(reflections,0,st,myCanvas,x))
     b.place(x = 1000,y = 340)
-    b8 = Button(myWindow, width='10', height='1', text='Reset',command = lambda : reset(myCanvas,b3,b4,e1,e2))
+    b8 = Button(myWindow, width='10', height='1', text='Reset',command = lambda : reset(myCanvas,b3,b4,e1,e2,b6))
     b8.place(x=1000, y=380)
     myWindow.mainloop()
 
